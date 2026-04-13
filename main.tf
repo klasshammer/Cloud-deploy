@@ -1,3 +1,16 @@
+terraform {
+
+  required_version = ">= 1.0"
+
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 6.0"
+    }
+  }
+}
+
 provider "aws" {
   region = "us-east-1"
 }
@@ -69,8 +82,8 @@ resource "aws_security_group" "sg_web" {
 
 # SG-BD
 resource "aws_security_group" "sg_bd" {
-  name        = "tu-grupo-seguridad-BD"
-  vpc_id      = module.vpc.vpc_id
+  name   = "tu-grupo-seguridad-BD"
+  vpc_id = module.vpc.vpc_id
 
   ingress {
     from_port   = 3306
@@ -96,16 +109,16 @@ resource "aws_db_subnet_group" "db_subnet_group" {
 }
 
 resource "aws_db_instance" "mysql_db" {
-  identifier           = "db-migracion"
-  engine               = "mysql"
-  engine_version       = "8.0.35" # Versión disponible estable (8.4 puede variar por región)
-  instance_class       = "db.t4g.micro"
-  allocated_storage    = 20
-  storage_type         = "gp3"
-  db_name              = "mydb"
-  username             = "admin"
-  password             = "TuPasswordSegura123" # Cambia esto
-  
+  identifier        = "db-migracion"
+  engine            = "mysql"
+  engine_version    = "8.0.35" # Versión disponible estable (8.4 puede variar por región)
+  instance_class    = "db.t4g.micro"
+  allocated_storage = 20
+  storage_type      = "gp3"
+  db_name           = "mydb"
+  username          = "admin"
+  password          = "TuPasswordSegura123" # Cambia esto
+
   db_subnet_group_name   = aws_db_subnet_group.db_subnet_group.name
   vpc_security_group_ids = [aws_security_group.sg_bd.id]
   availability_zone      = "us-east-1a"
